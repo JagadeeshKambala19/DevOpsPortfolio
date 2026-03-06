@@ -1,28 +1,36 @@
-import { useMemo } from "react";
+import { useRef } from "react";
 
 interface GlyphTextProps {
   text: string;
   className?: string;
 }
 
-export default function GlyphText({ text, className = "" }: GlyphTextProps) {
-  const glyphs = useMemo(
-    () =>
-      text.split("").map((char, i) => {
-        const delay = Math.random() * 3;
-        const duration = 2 + Math.random() * 2;
+interface Glyph {
+  char: string;
+  key: string;
+  style: React.CSSProperties;
+}
 
-        return {
-          char,
-          key: `${char}-${i}`,
-          style: {
-            animation: `glyph-shine ${duration}s ease-in-out infinite`,
-            animationDelay: `${delay}s`,
-          } as React.CSSProperties,
-        };
-      }),
-    [text]
-  );
+export default function GlyphText({ text, className = "" }: GlyphTextProps) {
+  const glyphsRef = useRef<Glyph[] | null>(null);
+
+  if (!glyphsRef.current) {
+    glyphsRef.current = text.split("").map((char, i) => {
+      const delay = Math.random() * 3;
+      const duration = 2 + Math.random() * 2;
+
+      return {
+        char,
+        key: `${char}-${i}`,
+        style: {
+          animation: `glyph-shine ${duration}s ease-in-out infinite`,
+          animationDelay: `${delay}s`,
+        },
+      };
+    });
+  }
+
+  const glyphs = glyphsRef.current;
 
   return (
     <span className={`inline-flex flex-wrap leading-relaxed ${className}`}>
