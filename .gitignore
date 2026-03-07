@@ -23,3 +23,10 @@ build
 *.njsproj
 *.sln
 *.sw?
+
+# Terraform
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
